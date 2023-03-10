@@ -11,7 +11,7 @@ Now what is doing the login function ?
 After the getsn we see a call to test_password_valid, after what r15 (the return value) is evaluated. If 0, we go to 0x4552, displaying "Testing if the password is valid". Then...
 Then... The value 0xf2 is compared with whatever is stored at @ 0x2410 ! If equals, we keep running untill a call to unlock_door  ! 0x2400 is in the range of our overflow ! Ok let's try this !
 
-![Image2](https://imgur.com/dPlaBTS)
+![Image2](https://imgur.com/dPlaBTS.jpg)
 
 # Testing the overflow
 
