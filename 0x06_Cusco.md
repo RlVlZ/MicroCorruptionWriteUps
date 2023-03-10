@@ -39,6 +39,7 @@ We noticed that before the problem of unalignement occured, we had been prompted
 And from there we will go step by step, looking at SP... BINGO ! After our breakpoint, we see that SP is incremented by 0x10, going right into an overflowed area, and the next instruction is a return statement !
 
 ![Imgur](https://imgur.com/esWOu3p.png)
+
 *Here in yellow you see the overflowed area, SP pointing right inside it*
 
 Look at that ! One step more and boom ! PC contains 0x4242, leading the program to crash. Whatever will be in place of those 0x42 0x42 bytes will be interpreted as an adress and the program will try executing it.
