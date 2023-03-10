@@ -3,7 +3,7 @@
 Looking at the login function (which is directly called by main), we can quickly see something interesting. It is prompted that the pswd must have a size between 8 and 16 char, but we see that the getsn function is given 0x1c as size argument...
 This mean we will be able to write 12 extra bytes ! Possible overflow here...
 
-![Image1](https://imgur.com/jCmOqyO)
+[img]https://i.imgur.com/jCmOqyO.png[/img]
 
 # Let's see if the overflow hypothesis is correct
 
