@@ -3,7 +3,7 @@
 Looking at the login function (which is directly called by main), we can quickly see something interesting. It is prompted that the pswd must have a size between 8 and 16 char, but we see that the getsn function is given 0x1c as size argument...
 This mean we will be able to write 12 extra bytes ! Possible overflow here...
 
-<blockquote class="imgur-embed-pub" lang="en" data-id="jCmOqyO"><a href="https://imgur.com/jCmOqyO">View post on imgur.com</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+![Imgur](https://imgur.com/jCmOqyO)
 
 # Let's see if the overflow hypothesis is correct
 
