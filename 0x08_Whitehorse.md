@@ -29,6 +29,8 @@ So far our payload is as follow : 16 bytes of padding + c642 (endianess !). Now 
 
 Now we add this opt code to our payload and get : `00000000000000000000000000000000c64230127f00b0123245`. We enter it with the option for hex data ticked and tada !
 
+# A closer look to what happended
+
 Just to see what happen, here is the state of the stack before we enter our corrupted password (right before the call to getsn):
 
 ![Imgur](https://imgur.com/nZUUMFd.png)
