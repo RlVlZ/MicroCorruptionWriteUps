@@ -46,7 +46,7 @@ Look at that ! One step more and boom ! PC contains 0x4242, leading the program 
 
 # Exploitation
 
-There is a function called **unlock_door** at address 4446. We will try to execute it. Our payload will be :
+There is a function called **unlock_door** at address 4446. We will try to execute it. Our exploit will be :
 
 `000102030405060708090a0b0c0d0e0f4644`
 
