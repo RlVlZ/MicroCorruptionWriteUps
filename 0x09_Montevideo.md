@@ -12,22 +12,22 @@ So let's run the program without breackpoint, it will just stop at the password 
 *A call to strcpy with two adresses as arguments : from and to*
 
 ![Imgur](https://imgur.com/3cBmyoK.png)  
-*We see the end of the exploit at adress 0x2410, and our stack pointer with 0xf bytes reserved before the return adress*
+*We see the end of the exploit (actually our payload) at adress 0x2410, and our stack pointer with 0xf bytes reserved before the return adress*
 
 But after the **strcpy** nothing have changed on the stack ! Still 16 zero bytes before the return adress... After a few try it eventually made sens : the **strcpy** function does not takes a "lenght" argument, and it is working with string... So it stop copying while it does not encouter a null byte. And my exploit was starting with a null byte ! But... wait : I also have nullbytes in my "payload" part ! Like in the `push 0x7f` : it's converted into a 2bytes values !
 
 ![Imgur](https://imgur.com/t6XRUQ1.png)
 
-Ok but let's keep it cool : this is preventing us from copying the exploit in the **login** memory area, but our exploit should still lay in aroud the 2400 adress. So we can use a non-zero padding to overwrite the return adress, making it point to the exploit at adress 2410 ! Let's thy this !
+Ok but let's keep it cool : this is preventing us from copying the exploit in the **login** memory area, but our exploit should still lay at the address 2400. So we can use a non-zero padding to overwrite the return adress, making it point to the exploit at adress 2410 ! Let's thy this !
 
 # Trying to execute code from adress 2410
 
 So we need a 16 bytes non-nul bytes of padding : I'll go for `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`
-Then we want the adress where the **login** function will return, with bigendianess, so : `1224` (not 1024 : this is the adress of the adress, we want the adress of the exploit, so the one right after)
-And finally our exploit, as usually the opcode to push 0x7f and then call the **INT** : `30127f00b0124c45`
+Then we want the adress where the **login** function will return, with bigendianess, so : `1224` (not 1024 : this is the adress of the adress, we want the adress of the payload, so the one right after)
+And finally our payload, as usually the opcode to push 0x7f and then call the **INT** : `30127f00b0124c45`
 We don't care about the 0x00 in this opcode, because the return will go directly to its adress, not to the copied one.
 
-Now let's try it. At first everthing seems to work properly, and after the **strcpy** function we see the return adress pointing to our exploit !
+Now let's try it. At first everthing seems to work properly, and after the **strcpy** function we see the return adress pointing to our payload !
 
 ![Imgur](https://imgur.com/GcZ33xg.png)
 
@@ -36,9 +36,9 @@ We keep going untill the return statement and then... PC is pointing to adress 0
 Oh no, a call to **memset** is erasing the area ! This memory chunk will always be erased when **login** will return. Meaning we cannot use this part of memory.  
 Ok so if we want to execute malicious code, it must be from the area where the buffer is copied, and it must contains no null-byte... Arf.
 
-# Making a payload without null-byte
+# Making an exploit without null-byte
 
-So we need a payload without null-byte, and pushing 0x7f before calling INT. My idea is to *compute* the value 0x007F in a register, and then push this register. To do so we will use some binary logic. I'll go with a AND statement, because it is easy to manipulate in assembly (I already saw some AND in other challenges), and easy to understand. 
+So we need an exploit without null-byte, meaning and pushing 0x7f before calling INT *without having 0x007F* in the opcode. Here I add that, being lazy I tried calling the interrupt with 0xaa7f, hoping that it might just read the LSB nibble, but it's not working... So my idea is to *compute* the value 0x007F in a register, and then push this register. To do so we will use some binary logic. I'll go with a AND statement, because it is easy to manipulate in assembly (I already saw some AND in other challenges), and easy to understand. 
 In binary, 0x00FF will look like that :  
  0    0    f    f
 0000 0000 0111 1111
@@ -53,15 +53,15 @@ This gives us 557f and aaff. So I want to move one of this value into a register
 Great ! The result has no null byte in it ! And now the payload will be something like that :  
 Padding : aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  
 Address : 0044  
-Exploit : 3a407f553af0ffaa0a12b0124c45  
+Payload : 3a407f553af0ffaa0a12b0124c45  
 
 No wait ! The address to overwrite the return, it contains a 00 ! No problem, let's return a bit further and fill the difference : 
 Padding : aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  
 Address : 0244  
 Filling : aaaa  
-Exploit : 3a407f553af0ffaa0a12b0124c45  
+Payload : 3a407f553af0ffaa0a12b0124c45  
 
-So here is our payload : `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0244aaaa3a407f553af0ffaa0a12b0124c45`
+So here is our exploit : `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0244aaaa3a407f553af0ffaa0a12b0124c45`
 
 Let's try it and... Success !
 
