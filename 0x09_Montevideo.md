@@ -65,3 +65,31 @@ So here is our exploit : `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0244aaaa3a407f553af0ff
 Let's try it and... Success !
 
 # A quick overview of how it's working
+
+I'll go quickly because this challenge it basically working as the two previous ones, the extrastep being here to write the exploit without null bytes.  
+So first we enter our exploit when prompted for a password. This will exploit will be stored at adress 2400 for now.  
+
+![Imgur](https://imgur.com/HuR0fto.png)
+
+Then the **login** function will call the **strcpy** function, which will copy whatever we entered as a password from the adress 0x2400 to the adress pointed by the StackPointer. This function will stop copying at the first 0x00 it meet. Because our exploit is 0x00 free, it will stop after it. Where ? We don't care, because we have already overwrite the return adress of the **login** function.
+
+![Imgur](https://imgur.com/DgqwE5y.png)
+
+This adress is pointing in an area we have overwrite. Here 0x4402. We could'nt use the first adress, 0x4400, because of the 0x00 in it, which would have stop the copy process. And now in the adress 0x4402 we put our payload, null-byte free. So running untill the ret statement of the loggin function we reach this point :
+
+![Imgur](https://imgur.com/TKmhWQm.png)
+
+StackPointer is giving the adress 0x4402, so the PC will gentelly jump here. One step later :
+
+![Imgur](https://imgur.com/x9oZVys.png)
+
+Now PC is set on our payload and the magic happen : one step and r10 contains 0x557f :
+
+![Imgur](https://imgur.com/CluVPDR.png)
+
+One more step and, because of the logical AND, r10 is set to 0x007f :
+
+![Imgur](https://imgur.com/I8jtLJ5.png)
+
+And voilà, push r10 on the stack and call INT.
+
