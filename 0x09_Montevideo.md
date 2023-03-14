@@ -40,11 +40,11 @@ Ok so if we want to execute malicious code, it must be from the area where the b
 
 So we need an exploit without null-byte, meaning and pushing 0x7f before calling INT *without having 0x007F* in the opcode. Here I add that, being lazy I tried calling the interrupt with 0xaa7f, hoping that it might just read the LSB nibble, but it's not working... So my idea is to *compute* the value 0x007F in a register, and then push this register. To do so we will use some binary logic. I'll go with a AND statement, because it is easy to manipulate in assembly (I already saw some AND in other challenges), and easy to understand. 
 In binary, 0x00FF will look like that :  
- 0    0    f    f
-0000 0000 0111 1111
-So I want two values, none of them containing a null-byte, that can be ANDed to get this. I'll use the following :
-0101 0101 0111 1111
-1010 1010 1111 1111
+ 0    0    f    f  
+0000 0000 0111 1111  
+So I want two values, none of them containing a null-byte, that can be ANDed to get this. I'll use the following :  
+0101 0101 0111 1111  
+1010 1010 1111 1111  
 
 This gives us 557f and aaff. So I want to move one of this value into a register, let's say r10, and it with the other value, and push the result on the stack before calling our interrupt. Let assemble those instructions :
 
