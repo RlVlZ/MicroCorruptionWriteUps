@@ -45,7 +45,7 @@ So I want two values, none of them containing a null-byte, that can be ANDed to 
 0101 0101 0111 1111  
 1010 1010 1111 1111  
 
-This gives us 557f and aaff. So I want to move one of this value into a register, let's say r10, and it with the other value, and push the result on the stack before calling our interrupt. Let assemble those instructions :
+This gives us 0x557f and 0xaaff. So I want to move one of this value into a register, let's say r10, and it with the other value, and push the result on the stack before calling our interrupt. Let assemble those instructions :
 
 ![Imgur](https://imgur.com/VllFSnx.png)
 
@@ -54,7 +54,7 @@ Padding : aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 Address : 0044  
 Payload : 3a407f553af0ffaa0a12b0124c45  
 
-No wait ! The address to overwrite the return, it contains a 00 ! No problem, let's return a bit further and fill the difference : 
+No wait ! The address to overwrite the return, it contains a 00 ! No problem, let's return a bit further and fill the difference :  
 Padding : aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  
 Address : 0244  
 Filling : aaaa  
