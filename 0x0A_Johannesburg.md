@@ -33,7 +33,7 @@ Once again, python is our friend. Let's create a payload containing 17 bytes of 
 
 ![Imgur](https://imgur.com/SG5jBlL.gif)
 
-And now let's sopy-past this as an hexadecimal input aaaand... succes !
+And now let's copy-past this as an hexadecimal input aaaand... succes !
 
 Easier than the previous level if you ask me.
 
